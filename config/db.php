@@ -1,4 +1,5 @@
 <?php
+    include('classes.php');
     $connection = null;
     function connect($host, $username, $password, $port, $db) {
         try {
@@ -23,8 +24,8 @@
             $stmt->execute();
             return true;
         } catch (PDOException $e) {
-            setcookie("type", "error", time() + 100, "/");
-            setcookie("error", $e->getMessage(), time() + 100, "/");
+            $error = new ErrorResponse(500, $e->getMessage());
+            setcookie("error", serialize($error), time() + 100, "/");
             return false;
         }
     }
@@ -40,8 +41,8 @@
             $stmt->execute();
             return true;
         } catch (PDOException $e) {
-            setcookie("type", "error", time() + 100, "/");
-            setcookie("error", $e->getMessage(), time() + 100, "/");
+            $error = new ErrorResponse(500, $e->getMessage());
+            setcookie("error", serialize($error), time() + 100, "/");
             return false;
         }
     }
@@ -63,8 +64,8 @@
             $stmt->execute();
             return true;
         } catch (PDOException $e) {
-            setcookie("type", "error", time() + 100, "/");
-            setcookie("error", $e->getMessage(), time() + 100, "/");
+            $error = new ErrorResponse(500, $e->getMessage());
+            setcookie("error", serialize($error), time() + 100, "/");
             return false;
         }
     }
@@ -90,8 +91,40 @@
             $stmt->execute();
             return true;
         } catch (PDOException $e) {
-            setcookie("type", "error", time() + 100, "/");
-            setcookie("error", $e->getMessage(), time() + 100, "/");
+            $error = new ErrorResponse(500, $e->getMessage());
+            setcookie("error", serialize($error), time() + 100, "/");
+            return false;
+        }
+    }
+
+    function get_restaurant_data($connection, $id) {
+        try {
+            $sql = "SELECT * FROM restaurant WHERE restaurant_id=:id";
+            $stmt = $connection->prepare($sql);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            $restaurant = $stmt->fetch();
+            setcookie("restaurant", serialize($restaurant), time() + 86400, "/");
+            return true;
+        } catch (PDOException $e) {
+            $error = new ErrorResponse(500, $e->getMessage());
+            setcookie("error", serialize($error), time() + 100, "/");
+            return false;
+        }
+    }
+
+    function get_user_reviews($connection, $cid) {
+        try {
+            $sql = "SELECT * FROM review WHERE customer_id=:cid";
+            $stmt = $connection->prepare($sql);
+            $stmt->bindParam(":cid", $cid);
+            $stmt->execute();
+            $user_reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            setcookie("user_reviews", $user_reviews, time() + 86400, "/");
+            return true;
+        } catch (PDOException $e) {
+            $error = new ErrorResponse(500, $e->getMessage());
+            setcookie("error", serialize($error), time() + 100, "/");
             return false;
         }
     }
@@ -101,7 +134,7 @@
         $stmt = $connection->prepare($sql);
         $stmt->bindParam(':email', $email);
         $stmt->execute();
-        $password_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $password_data = $stmt->fetch();
         if (!$password_data) {
             return [false, ['error' => 'Invalid Email']];
         } else {
@@ -112,7 +145,7 @@
                 $stmt = $connection->prepare($sql);
                 $stmt->bindParam(':cust_id', $custId);
                 $stmt->execute();
-                $profile = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $profile = $stmt->fetch();
                 $stmt = null;
                 return [true, $profile];
             } else {
