@@ -1,11 +1,11 @@
 # Slurp - Restaurant Review System
 
 **Authors**
-- B.S.N. Abhiram
-- Kriti Singh
-- Rajat Khandelwal
-- Rishab Nanda
-- Shivam Singh
+- B.S.N. Abhiram - Backend Manager
+- Kriti Singh - Database Administrator
+- Rajat Khandelwal - Frontend Team
+- Rishab Nanda - Frontend Team
+- Shivam Singh - Frontend Team
 
 *Technologies Used*
 - PHP
