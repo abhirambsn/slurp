@@ -107,7 +107,14 @@
         } else {
             $hash = $password_data['password'];
             if (password_verify($password, $hash)) {
-                return [true, ['id' => $password_data['id'], 'name' => $password_data['name'], 'email' => $password_data['email']]];
+                $custId = $password_data['customer_id'];
+                $sql = "SELECT * FROM customer where customer_id=:cust_id";
+                $stmt = $connection->prepare($sql);
+                $stmt->bindParam(':cust_id', $custId);
+                $stmt->execute();
+                $profile = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $stmt = null;
+                return [true, $profile];
             } else {
                 return [false, ['error' => 'Invalid Password']];
             }

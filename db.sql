@@ -12,7 +12,9 @@ CREATE TABLE user(
     email varchar(100) not null,
     password varchar(255) not null,
     isAdmin boolean not null default(false),
+    customer_id varchar(100) not null,
     FOREIGN KEY (email) REFERENCES customer(email),
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
 );
 
 CREATE TABLE restaurant(
