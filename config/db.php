@@ -181,6 +181,21 @@
         }
     }
 
+    function search_restaurant($connection, $query) {
+        try {
+            $sql = "SELECT * FROM restaurant WHERE restaurant_name LIKE :query";
+            $stmt = $connection->prepare($sql);
+            $stmt->bindValue(':query', '%'.$query.'%');
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        } catch (PDOException $e) {
+            $error = new ErrorResponse(500, $e->getMessage());
+            setcookie("error", serialize($error), time() + 100, "/");
+            return false;
+        }
+    }
+
     function login_check($connection, $email, $password) {
         $sql = "SELECT * FROM users WHERE email=:email";
         $stmt = $connection->prepare($sql);

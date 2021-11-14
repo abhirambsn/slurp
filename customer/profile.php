@@ -2,7 +2,7 @@
     include('../config/helpers.php');
     include_once('../config/classes.php');
     isAuthenticated();
-    $userData = unserialize($_COOKIE['user']);
+    $user = unserialize($_COOKIE['user']);
     $response = null;
 
     if (isset($_COOKIE['response'])) {
@@ -10,7 +10,7 @@
         print_r($response);
     }
 
-    print_r($userData);
+    print_r($user);
 ?>
 <!DOCTYPE html>
 <html lang="en">

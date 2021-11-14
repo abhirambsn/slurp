@@ -1,7 +1,7 @@
 <?php 
     include('../config/helpers.php');
     isAuthenticated();
-    $userData = unserialize($_COOKIE['user']);
+    $user = unserialize($_COOKIE['user']);
     $restaurant = $_GET['restaurant'];
 ?>
 
