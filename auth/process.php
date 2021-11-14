@@ -6,15 +6,15 @@
         if ($_POST['type'] == 'register') {
             $name = $_POST['name'];
             $email = $_POST['email'];
+            $phone_number = $_POST['phone_number'];
             $password = $_POST['password'];
-            $insert = new_customer($connection, $name, $email, $password);
+            $address = $_POST['address'];
+            $insert = new_customer($connection, $name, $email, $address, $phone_number, $password);
             if ($insert) {
                 $response = new SuccessResponse(201, "Registration Successful");
                 setcookie("response", serialize($response), time() + 100, "/");
-                header('Location: /slurp/autn/success.php'); 
+                header('Location: /slurp/auth/success.php'); 
             } else {
-                $response = new ErrorResponse(500, "Error Occurred");
-                setcookie("error", serialize($response), time() + 100, "/");
                 header('Location: /slurp/auth/failure.php');
             }
         } else if ($_POST['type'] == 'login') {
@@ -24,7 +24,7 @@
             if ($check_login[0]) {
                 $userResp = new UserCookie();
                 $userResp->set_login_status(true);
-                $userResp->data($check_login[1]);
+                $userResp->set_data($check_login[1]);
                 setcookie("user", serialize($userResp), time() + 86400, "/");
                 header('Location: /slurp/dashboard.php');
             } else {
@@ -36,8 +36,7 @@
     } else if (isset($_GET['logout'])) {
         if (isset($_COOKIE['user'])) {
             unset($_COOKIE['user']);
-            // setcookie("loggedIn", false, time() - 1, "/");
-            // setcookie("data", [], time() - 1, "/");
+            setcookie("user", null, time() - 1, "/");
             $response = new SuccessResponse(200, "Logout Successful");
             setcookie("response", serialize($response), time() + 100, "/");
             header('Location: /slurp/index.php');

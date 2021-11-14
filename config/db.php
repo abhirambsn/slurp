@@ -13,14 +13,32 @@
         return $connection;
     }
 
-    function new_customer($connection, $name, $email, $password) {
+    function new_customer($connection, $name, $email, $address, $phone_number, $password, $isAdmin = false) {
         try {
             $password = password_hash($password, PASSWORD_ARGON2ID, ['memory_cost' => 2048, 'time_cost' => 4, 'threads' => 3]);
-            $sql = "INSERT INTO customer(name, email, password) VALUES(:name, :email, :password)";
+            $sql = "INSERT INTO customer(customer_id, customer_name, address, email, phone_number, isAdmin) VALUES(:custId, :name, :address, :email, :phone_number, :isAdmin)";
             $stmt = $connection->prepare($sql);
+            $cid = uniqid($more_entropy = true);
+            $stmt->bindParam(':custId', $cid);
             $stmt->bindParam(':name', $name);
+            $stmt->bindParam(':address', $address);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':phone_number', $phone_number);
+            $stmt->bindParam(':isAdmin', $isAdmin);
+            $stmt->execute();
+            $sql = "SELECT customer_id FROM customer WHERE email=:email";
+            $stmt = $connection->prepare($sql);
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
+            $result = $stmt->fetch();
+            $id = $result['customer_id'];
+            $sql = "INSERT INTO users(user_id, email, password, customer_id) VALUES (:userId, :email, :password, :customer_id)";
+            $stmt = $connection->prepare($sql);
+            $uid = uniqid($more_entropy=true);
+            $stmt->bindParam(':userId', $uid);
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':password', $password);
+            $stmt->bindParam(':customer_id', $id);  
             $stmt->execute();
             return true;
         } catch (PDOException $e) {
@@ -30,10 +48,26 @@
         }
     }
 
+    function get_all_restaurants($connection) {
+        try {
+            $sql = "SELECT * FROM restaurant";
+            $stmt = $connection->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        } catch (PDOException $e) {
+            $error = new ErrorResponse(500, $e->getMessage());
+            setcookie("error", serialize($error), time() + 100, "/");
+            return false;
+        }
+    }
+
     function new_restaurant($connection, $name, $email, $address, $phone_number) {
         try {
-            $sql = "INSERT INTO restaurant(restaurant_name, email, address, phone_number) VALUES(:restaurant_name, :email, :address, :phone_number)";
+            $sql = "INSERT INTO restaurant(restaurant_id, restaurant_name, email, address, phone_number) VALUES(:restId, :restaurant_name, :email, :address, :phone_number)";
+            $rid = uniqid($more_entropy = true);
             $stmt = $connection->prepare($sql);
+            $stmt->bindParam(':restId', $rid);
             $stmt->bindParam(':restaurant_name', $name);
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':address', $address);
@@ -50,11 +84,15 @@
     function new_review($connection, $cid, $rid, $rating, $comment=null) {
         try {
             if ($comment) {
-                $sql = "INSERT INTO review(customer_id, restaurant_id, rating, comment) VALUES(:customer_id, :restaurant_id, :rating, :comment)";
+                $sql = "INSERT INTO review(review_id, customer_id, restaurant_id, rating, comment) VALUES(:revId, :customer_id, :restaurant_id, :rating, :comment)";
             } else {
-                $sql = "INSERT INTO review(customer_id, restaurant_id, rating) VALUES(:customer_id, :restaurant_id, :rating)";
+                $sql = "INSERT INTO review(review_id, customer_id, restaurant_id, rating) VALUES(:revId, :customer_id, :restaurant_id, :rating)";
             }
+            echo $cid . '<br>' . $rid . '<br>';
+            $rating = (int)$rating;
+            $revId = uniqid($more_entropy = true);
             $stmt = $connection->prepare($sql);
+            $stmt->bindParam(':revId', $revId);
             $stmt->bindParam(':customer_id', $cid);
             $stmt->bindParam(':restaurant_id', $rid);
             $stmt->bindParam(':rating', $rating);
@@ -70,26 +108,27 @@
         }
     }
 
-    function update_customer($connection, $customer_id, $name=null, $email=null, $password=null) {
+    function update_customer($connection, $email, $oldPassword, $password) {
         try {
-            if ($name == null && $email == null) {
-                $sql = "UPDATE customer SET password=':password' WHERE customer_id=$customer_id";
-    
-            } else if ($name == null) {
-                $sql = "UPDATE customer SET email=':email', password=':password' WHERE customer_id=$customer_id";
-            } else if ($email == null) {
-                $sql = "UPDATE customer SET name=':name', password=':password' WHERE customer_id=$customer_id";
-            }
+            $sql = "SELECT password FROM users WHERE email=:email";
             $stmt = $connection->prepare($sql);
-            $stmt->bindParam(':password', $password);
-    
-            if ($name) {
-                $stmt->bindParam(':name', $name);
-            } else if ($email) {
-                $stmt->bindParam(':email', $email);
-            }
+            $stmt->bindParam(':email', $email);
             $stmt->execute();
-            return true;
+            $result = $stmt->fetch();
+            $result = $result['password'];
+            if (password_verify($oldPassword, $result)) {
+                $password = password_hash($password, PASSWORD_ARGON2ID, ['memory_cost' => 2048, 'time_cost' => 4, 'threads' => 3]);
+                $sql = "UPDATE users SET password=:password WHERE email=:email";
+                $stmt = $connection->prepare($sql);
+                $stmt->bindParam(':password', $password);
+                $stmt->bindParam(':email', $email);
+                $stmt->execute();
+                return true;
+            } else {
+                $error = new ErrorResponse(401, "Old Password mismatch");
+                setcookie("error", serialize($error), time() + 100, "/");
+                return false;
+            }
         } catch (PDOException $e) {
             $error = new ErrorResponse(500, $e->getMessage());
             setcookie("error", serialize($error), time() + 100, "/");
@@ -104,8 +143,7 @@
             $stmt->bindParam(':id', $id);
             $stmt->execute();
             $restaurant = $stmt->fetch();
-            setcookie("restaurant", serialize($restaurant), time() + 86400, "/");
-            return true;
+            return $restaurant;
         } catch (PDOException $e) {
             $error = new ErrorResponse(500, $e->getMessage());
             setcookie("error", serialize($error), time() + 100, "/");
@@ -120,8 +158,22 @@
             $stmt->bindParam(":cid", $cid);
             $stmt->execute();
             $user_reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            setcookie("user_reviews", $user_reviews, time() + 86400, "/");
-            return true;
+            return $user_reviews;
+        } catch (PDOException $e) {
+            $error = new ErrorResponse(500, $e->getMessage());
+            setcookie("error", serialize($error), time() + 100, "/");
+            return false;
+        }
+    }
+
+    function get_restaurant_reviews($connection, $rid) {
+        try {
+            $sql = "SELECT * FROM review WHERE restaurant_id=:rid";
+            $stmt = $connection->prepare($sql);
+            $stmt->bindParam(":rid", $rid);
+            $stmt->execute();
+            $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $reviews;
         } catch (PDOException $e) {
             $error = new ErrorResponse(500, $e->getMessage());
             setcookie("error", serialize($error), time() + 100, "/");
