@@ -1,6 +1,6 @@
 <?php
     include('../config/db.php');
-    include('../config/classes.php');
+    include_once('../config/classes.php');
     if (isset($_POST['type'])) {
         $connection = connect("localhost", "root", "", 3307, "test");
         if ($_POST['type'] == 'register') {
@@ -9,11 +9,13 @@
             $password = $_POST['password'];
             $insert = new_customer($connection, $name, $email, $password);
             if ($insert) {
-                setcookie("type", "success", time() + 100, "/");
-                setcookie("message", "Registration Successful", time() + 100, "/");
-                header('Location: success.php'); 
+                $response = new SuccessResponse(201, "Registration Successful");
+                setcookie("response", serialize($response), time() + 100, "/");
+                header('Location: /slurp/autn/success.php'); 
             } else {
-                header('Location: failure.php');
+                $response = new ErrorResponse(500, "Error Occurred");
+                setcookie("error", serialize($response), time() + 100, "/");
+                header('Location: /slurp/auth/failure.php');
             }
         } else if ($_POST['type'] == 'login') {
             $email =  $_POST['email'];
@@ -26,11 +28,8 @@
                 setcookie("user", serialize($userResp), time() + 86400, "/");
                 header('Location: /slurp/dashboard.php');
             } else {
-                $userResp = new UserCookie();
-                $userResp->set_login_status(true);
-                $userResp->data($check_login[1]);
-                $userResp->set_message($check_login[1]['error']);
-                setcookie("user", serialize($userResp), time() + 100, "/");
+                $userResp = new ErrorResponse(401, "Incorrect email or password");
+                setcookie("error", serialize($userResp), time() + 100, "/");
                 header('Location: /slurp/auth/failure.php');
             }
         }

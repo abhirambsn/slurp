@@ -130,9 +130,9 @@
     }
 
     function login_check($connection, $email, $password) {
-        $sql = "SELECT * FROM users WHERE email=':email'";
+        $sql = "SELECT * FROM users WHERE email=:email";
         $stmt = $connection->prepare($sql);
-        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
         $password_data = $stmt->fetch();
         if (!$password_data) {
