@@ -7,6 +7,9 @@
 - Rishab Nanda - Frontend Team
 - Shivam Singh - Frontend Team
 
+
+**NOTE FOR EVERYONE: DO NOT TOUCH THE CONFIG FOLDER AS IT CONTAINS IMPORTANT BACKEND DATA**
+
 *Technologies Used*
 - PHP
 - HTML5

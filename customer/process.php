@@ -1,4 +1,7 @@
 <?php
+    /**
+     * CAUTION: This file contains the BACKEND of this WEBSITE. MODIFY ONLY IF YOU KNOW WHAT YOU ARE DOING
+     */
     include('../config/db.php');
     include_once('../config/classes.php');
     $connection = connect("localhost", "root", "", 3307, "test");

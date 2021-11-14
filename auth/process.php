@@ -1,4 +1,7 @@
 <?php
+    /**
+     * CAUTION: This file contains the BACKEND of this WEBSITE. MODIFY ONLY IF YOU KNOW WHAT YOU ARE DOING
+     */
     include('../config/db.php');
     include_once('../config/classes.php');
     if (isset($_POST['type'])) {
