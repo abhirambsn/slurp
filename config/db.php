@@ -153,7 +153,7 @@
 
     function get_user_reviews($connection, $cid) {
         try {
-            $sql = "SELECT * FROM review WHERE customer_id=:cid";
+            $sql = "SELECT restaurant_name, rating, comment FROM review, restaurant WHERE review.restaurant_id = restaurant.restaurant_id AND customer_id=:cid";
             $stmt = $connection->prepare($sql);
             $stmt->bindParam(":cid", $cid);
             $stmt->execute();
@@ -168,7 +168,7 @@
 
     function get_restaurant_reviews($connection, $rid) {
         try {
-            $sql = "SELECT * FROM review WHERE restaurant_id=:rid";
+            $sql = "SELECT restaurant_name, rating, comment, customer_name FROM review, restaurant, customer WHERE review.restaurant_id = restaurant.restaurant_id AND review.customer_id = customer.customer_id AND review.restaurant_id=:rid";
             $stmt = $connection->prepare($sql);
             $stmt->bindParam(":rid", $rid);
             $stmt->execute();
