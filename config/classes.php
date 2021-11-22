@@ -24,18 +24,20 @@ abstract class Response {
 }
 
 class ErrorResponse extends Response {
-    public function __construct($code, $data) {
+    public function __construct($code, $data, $redirectUri=null) {
         $this->type = 'error';
         $this->code = $code;
         $this->data = $data;
+        $this->redirectUri = $redirectUri;
     }
 }
 
 class SuccessResponse extends Response {
-    public function __construct($code, $data, $type='success') {
+    public function __construct($code, $data, $redirectUri = null, $type='success') {
         $this->type = $type;
         $this->code = $code;
         $this->data = $data;
+        $this->redirectUri = $redirectUri;
     }
 }
 ?>
