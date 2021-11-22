@@ -3,16 +3,20 @@ function isAuthenticated() {
     if (isset($_COOKIE['user'])) {
         return true;
     } else {
-        header('Location: /slurp/auth/login.php');
+        $error = new ErrorResponse(401, "Not Authenticated", "http://".$_SERVER['HTTP_HOST'].'/slurp/auth/login.php');
+        setcookie("error", serialize($error), time() + 100, "/");
+        header('Location: /slurp/error.php');
         return false;
     }
 }
 
 function isAdmin() {
-    isAuthenticated();
     $user = unserialize($_COOKIE['user']);
     if (!$user->data['isAdmin']) {
-        header('Location: /slurp/auth/login.php');
+        $error = new ErrorResponse(401, "Unauthorized Access to Admin Area", "http://".$_SERVER['HTTP_HOST'].'/slurp/auth/login.php');
+        setcookie("error", serialize($error), time() + 100, "/");
+        header('Location: /slurp/error.php');
+        return false;
     }
     return $user->data['isAdmin'];
 }

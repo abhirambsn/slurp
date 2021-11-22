@@ -1,13 +1,21 @@
 <?php
+    use DotEnv\DotEnv;
+    $path = dirname(dirname(__FILE__)) . '\\.env';
+    (new DotEnv($path))->load();
     include('classes.php');
     $connection = null;
-    function connect($host, $username, $password, $port, $db) {
+    function connect() {
         try {
+            $host = $_ENV["DB_HOST"];
+            $password = $_ENV["DB_PASSWORD"];
+            $username = $_ENV["DB_USER"];
+            $port = (int) $_ENV["DB_PORT"];
+            $db = $_ENV["DB_NAME"];
             $connection = new PDO("mysql:host=$host;port=$port;dbname=$db", $username, $password);
             $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            setcookie("type", "error", time() + 100, "/");
-            setcookie("error", $e->getMessage(), time() + 100, "/");
+            $error = new ErrorResponse(500, $e->getMessage());
+            setcookie("error", serialize($error), time() + 100, "/");
             return false;
         }
         return $connection;
@@ -62,6 +70,38 @@
         }
     }
 
+    function update_restaurant($connection, $rid, $name, $email, $address, $phoneNumber) {
+        try {
+            $sql = "UPDATE restaurant SET restaurant_name=:name, email=:email, address=:address, phone_number=:phone_number WHERE restaurant_id=:rid";
+            $stmt = $connection->prepare($sql);
+            $stmt->bindParam(":name", $name);
+            $stmt->bindParam(":email", $email);
+            $stmt->bindParam(":address", $address);
+            $stmt->bindParam(":phone_number", $phoneNumber);
+            $stmt->bindParam(":rid", $rid);
+            $stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            $error = new ErrorResponse(500, $e->getMessage());
+            setcookie("error", serialize($error), time() + 100, "/");
+            return false;
+        }
+    }
+
+    function delete_restaurant($connection, $rid) {
+        try {
+            $sql = "DELETE FROM restaurant WHERE restaurant_id=:rid";
+            $stmt = $connection->prepare($sql);
+            $stmt->bindParam(":rid", $rid);
+            $stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            $error = new ErrorResponse(500, $e->getMessage());
+            setcookie("error", serialize($error), time() + 100, "/");
+            return false;
+        }
+    }
+
     function new_restaurant($connection, $name, $email, $address, $phone_number) {
         try {
             $sql = "INSERT INTO restaurant(restaurant_id, restaurant_name, email, address, phone_number) VALUES(:restId, :restaurant_name, :email, :address, :phone_number)";
@@ -81,6 +121,43 @@
         }
     }
 
+    function get_average_rating($connection, $restaurant_id) {
+        try {
+            $sql = "SELECT AVG(rating) AS average FROM review WHERE restaurant_id=:rid";
+            $stmt = $connection->prepare($sql);
+            $stmt->bindParam(':rid', $restaurant_id);
+            $stmt->execute();
+            $result = $stmt->fetch();
+            return $result;
+        } catch (PDOException $e) {
+            $error = new ErrorResponse(500, $e->getMessage());
+            setcookie("error", serialize($error), time() + 100, "/");
+            return false;
+        }
+    }
+
+    function search($connection, $query, $filter=null, $order="asc") {
+        try {
+            $sql = "SELECT restaurant.*, AVG(rating) as avg_rating from restaurant, review WHERE restaurant.restaurant_id = review.restaurant_id AND restaurant_name LIKE :name GROUP BY restaurant.restaurant_id";
+            if ($filter) {
+                if (str_contains($filter, "rating")) {
+                    $sql .= " ORDER BY avg_rating ".$order;
+                } else {
+                    $sql .= " ORDER BY $filter ".$order;
+                }
+            }
+            $stmt = $connection->prepare($sql);
+            $stmt->bindValue(':name', '%'.$query.'%');
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        } catch (PDOException $e) {
+            $error = new ErrorResponse(500, $e->getMessage());
+            setcookie("error", serialize($error), time() + 100, "/");
+            return false;
+        }
+    }
+
     function new_review($connection, $cid, $rid, $rating, $comment=null) {
         try {
             if ($comment) {
@@ -88,8 +165,7 @@
             } else {
                 $sql = "INSERT INTO review(review_id, customer_id, restaurant_id, rating) VALUES(:revId, :customer_id, :restaurant_id, :rating)";
             }
-            echo $cid . '<br>' . $rid . '<br>';
-            $rating = (int)$rating;
+            $rating = (float)$rating;
             $revId = uniqid($more_entropy = true);
             $stmt = $connection->prepare($sql);
             $stmt->bindParam(':revId', $revId);
@@ -153,7 +229,7 @@
 
     function get_user_reviews($connection, $cid) {
         try {
-            $sql = "SELECT restaurant_name, rating, comment FROM review, restaurant WHERE review.restaurant_id = restaurant.restaurant_id AND customer_id=:cid";
+            $sql = "SELECT review_id, restaurant_name, rating, comment FROM review, restaurant WHERE review.restaurant_id = restaurant.restaurant_id AND customer_id=:cid";
             $stmt = $connection->prepare($sql);
             $stmt->bindParam(":cid", $cid);
             $stmt->execute();
@@ -168,7 +244,7 @@
 
     function get_restaurant_reviews($connection, $rid) {
         try {
-            $sql = "SELECT restaurant_name, rating, comment, customer_name FROM review, restaurant, customer WHERE review.restaurant_id = restaurant.restaurant_id AND review.customer_id = customer.customer_id AND review.restaurant_id=:rid";
+            $sql = "SELECT review_id, restaurant_name, rating, comment, customer_name FROM review, restaurant, customer WHERE review.restaurant_id = restaurant.restaurant_id AND review.customer_id = customer.customer_id AND review.restaurant_id=:rid";
             $stmt = $connection->prepare($sql);
             $stmt->bindParam(":rid", $rid);
             $stmt->execute();
@@ -203,6 +279,29 @@
             } else {
                 return [false, ['error' => 'Invalid Password']];
             }
+        }
+    }
+
+    function get_admin_stats($connection) {
+        try {
+            $stats = array();
+            $sql1 = "SELECT COUNT(*) as cnt FROM customer";
+            $sql2 = "SELECT COUNT(*) as cnt FROM restaurant";
+            $sql3 = "SELECT COUNT(*) as cnt FROM review";
+            $stmt = $connection->prepare($sql1);
+            $stmt->execute();
+            array_push($stats, $stmt->fetch()['cnt']);
+            $stmt = $connection->prepare($sql2);
+            $stmt->execute();
+            array_push($stats, $stmt->fetch()['cnt']);
+            $stmt = $connection->prepare($sql3);
+            $stmt->execute();
+            array_push($stats, $stmt->fetch()['cnt']);
+            return $stats;
+        } catch (PDOException $e) {
+            $error = new ErrorResponse(500, $e->getMessage());
+            setcookie("error", serialize($error), time() + 100, "/");
+            return false;
         }
     }
 

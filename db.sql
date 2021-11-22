@@ -12,8 +12,8 @@ CREATE TABLE users(
     email varchar(100) not null,
     password varchar(255) not null,
     customer_id varchar(100),
-    FOREIGN KEY (email) REFERENCES customer(email),
-    FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    FOREIGN KEY (email) REFERENCES customer(email) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE restaurant(
@@ -30,7 +30,8 @@ CREATE TABLE review(
     restaurant_id varchar(100) not null,
     rating decimal(2, 1) default 0.0 not null,
     comment text,
-    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
-    FOREIGN KEY (restaurant_id) REFERENCES restaurant(restaurant_id)
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (restaurant_id) REFERENCES restaurant(restaurant_id) ON UPDATE CASCADE ON DELETE CASCADE
+    
 );
 
