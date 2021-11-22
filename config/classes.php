@@ -33,7 +33,7 @@ class ErrorResponse extends Response {
 }
 
 class SuccessResponse extends Response {
-    public function __construct($code, $data, $type='success', $redirectUri = null) {
+    public function __construct($code, $data, $redirectUri = null, $type='success') {
         $this->type = $type;
         $this->code = $code;
         $this->data = $data;

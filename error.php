@@ -14,6 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Error: <?php echo $error->code; ?></title>
     <link rel="stylesheet" href="/slurp/static/css/failure.css">
+    <link rel="stylesheet" href="/slurp/static/css/bootstrap-modified.min.css">
     <script src="https://kit.fontawesome.com/8586a77d33.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -28,7 +29,7 @@
                 <h2>Error Code: <?php echo $error->code; ?></h2>
                 <h3><?php echo $error->data; ?></h3>
                 <?php if($error->redirectUri): ?>
-                    <a href="<?php echo $error->redirectUri; ?>" style="text-decoration: none" class="text-muted text-center nav-link text-light"><i class="fas fa-arrow-left"></i>&nbsp; Go Back</a>
+                    <a href="<?php echo $error->redirectUri; ?>" class="text-light text-center nav-link"><i class="fas fa-arrow-left"></i>&nbsp; Go Back</a>
                 <?php endif; ?>
             </div>
         </div>

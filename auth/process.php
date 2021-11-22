@@ -48,7 +48,7 @@
                 header('Location: /slurp/dashboard.php');
                 return;
             } else {
-                $userResp = new ErrorResponse(401, "Incorrect email or password");
+                $userResp = new ErrorResponse(401, "Incorrect email or password", "http://" . $_SERVER['HTTP_HOST'] ."/slurp/auth/login.php");
                 setcookie("error", serialize($userResp), time() + 100, "/");
                 header('Location: /slurp/error.php');
                 return;

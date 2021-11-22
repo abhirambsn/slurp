@@ -14,6 +14,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Success</title>
     <link rel="stylesheet" href="/slurp/static/css/success.css">
+    <link rel="stylesheet" href="/slurp/static/css/bootstrap-modified.min.css">
+    <script src="https://kit.fontawesome.com/8586a77d33.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <img src="/slurp/static/svg/success_wave.svg" alt="Wave" class="wave">
@@ -25,7 +27,7 @@
             <div class="data">
                 <h2><?php echo $resp->data; ?></h2>
                 <?php if($resp->redirectUri): ?>
-                    <a href="<?php echo $resp->redirectUri; ?>" style="text-decoration: none" class="text-muted text-center nav-link"><i class="fas fa-arrow-right"></i>&nbsp; Continue</a>
+                    <a href="<?php echo $resp->redirectUri; ?>" class="text-center nav-link text-dark"><i class="fas fa-arrow-right"></i>&nbsp; Continue</a>
                 <?php endif; ?>
             </div>
         </div>
