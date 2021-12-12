@@ -5,17 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <link rel="stylesheet" href="/slurp/static/css/register.css">
+    <link rel="stylesheet" href="/static/css/register.css">
     <script src="https://kit.fontawesome.com/8586a77d33.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="container">
         <div class="img">
-            <img src="/slurp/static/svg/hero.svg" alt="Hero">
+            <img src="/static/svg/hero.svg" alt="Hero">
         </div>
         <div class="register-container">
-            <form action="/slurp/auth/process.php" method="post">
-                <img src="/slurp/static/svg/avatar.svg" alt="Avatar" class="avatar">
+            <form action="/auth/process.php" method="post">
+                <img src="/static/svg/avatar.svg" alt="Avatar" class="avatar">
                 <h2>Hey There</h2>
                 <h3>Register here</h3>
                 <div class="input-group">
@@ -77,6 +77,6 @@
             </form>
         </div>
     </div>
-    <script src="/slurp/static/js/input.js"></script>
+    <script src="/static/js/input.js"></script>
 </body>
 </html>

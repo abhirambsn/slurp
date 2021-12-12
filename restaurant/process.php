@@ -17,10 +17,10 @@
         if ($post_review) {
             $response = new SuccessResponse(201, "Review Posted successfully", 'info');
             setcookie("response", serialize($response), time() + 10, "/");
-            header("Location: /slurp/restaurant/restaurants.php?id=$rid");
+            header("Location: /restaurant/restaurants.php?id=$rid");
             return;
         } else {
-            header('Location: /slurp/error.php');
+            header('Location: /error.php');
             return;
         }
     } else if (isset($_POST['add_restaurant'])) {
@@ -28,7 +28,7 @@
         if (!$isAdmin) {
             $error = new ErrorResponse(401, "Unauthorized");
             setcookie("error", serialize($error), time() + 100, "/");
-            header('Location: /slurp/error.php');
+            header('Location: /error.php');
             return;
         } else {
             $name = $_POST['name'];
@@ -39,10 +39,10 @@
             if ($newRest) {
                 $response = new SuccessResponse(201, "Restaurant Registered");
                 setcookie("response", serialize($response), time() + 10, "/");
-                header('Location: /slurp/admin/');
+                header('Location: /admin/');
                 return;
             } else {
-                header('Location: /slurp/error.php'); 
+                header('Location: /error.php'); 
                 return;
             }
         }
@@ -51,7 +51,7 @@
         if (!$isAdmin) {
             $error = new ErrorResponse(401, "Unauthorized");
             setcookie("error", serialize($error), time() + 100, "/");
-            header('Location: /slurp/error.php');
+            header('Location: /error.php');
             return;
         } else {
             $name = $_POST['name'];
@@ -63,10 +63,10 @@
             if ($updated) {
                 $response = new SuccessResponse(201, "Restaurant Updation Success");
                 setcookie("response", serialize($response), time() + 10, "/");
-                header('Location: /slurp/admin/');
+                header('Location: /admin/');
                 return;
             } else {
-                header('Location: /slurp/error.php'); 
+                header('Location: /error.php'); 
                 return;
             }
         }
@@ -77,17 +77,17 @@
             if (!$isAdmin) {
                 $error = new ErrorResponse(401, "Unauthorized");
                 setcookie("error", serialize($error), time() + 100, "/");
-                header('Location: /slurp/error.php');
+                header('Location: /error.php');
                 return;
             } else {
                 $delete = delete_restaurant($connection, $rid);
                 if ($delete) {
                     $response = new SuccessResponse(201, "Restaurant Deleted");
                     setcookie("response", serialize($response), time() + 10, "/");
-                    header('Location: /slurp/admin/');
+                    header('Location: /admin/');
                     return;
                 } else {
-                    header('Location: /slurp/error.php'); 
+                    header('Location: /error.php'); 
                     return;
                 }
             }

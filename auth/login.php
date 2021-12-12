@@ -1,6 +1,6 @@
 <?php
     if (isset($_COOKIE['user'])) {
-        header('Location: /slurp/dashboard.php');
+        header('Location: /dashboard.php');
     }
 ?>
 <!DOCTYPE html>
@@ -10,18 +10,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="/slurp/static/css/login.css">
+    <link rel="stylesheet" href="/static/css/login.css">
     <script src="https://kit.fontawesome.com/8586a77d33.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <img src="/slurp/static/svg/wave.svg" alt="Wave" class="wave">
+    <img src="/static/svg/wave.svg" alt="Wave" class="wave">
     <div class="container">
         <div class="img">
-            <img src="/slurp/static/svg/hero.svg" alt="Hero">
+            <img src="/static/svg/hero.svg" alt="Hero">
         </div>
         <div class="login-container">
-            <form action="/slurp/auth/process.php" method="post">
-                <img src="/slurp/static/svg/avatar.svg" alt="Avatar" class="avatar">
+            <form action="/auth/process.php" method="post">
+                <img src="/static/svg/avatar.svg" alt="Avatar" class="avatar">
                 <h2>Welcome</h2>
                 <h3>Login here</h3>
                 <br><br><br>
@@ -48,6 +48,6 @@
             </form> 
         </div>
     </div>
-    <script src="/slurp/static/js/input.js"></script>
+    <script src="/static/js/input.js"></script>
 </body>
 </html>

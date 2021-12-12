@@ -13,15 +13,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Success</title>
-    <link rel="stylesheet" href="/slurp/static/css/success.css">
-    <link rel="stylesheet" href="/slurp/static/css/bootstrap-modified.min.css">
+    <link rel="stylesheet" href="/static/css/success.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-modified.min.css">
     <script src="https://kit.fontawesome.com/8586a77d33.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <img src="/slurp/static/svg/success_wave.svg" alt="Wave" class="wave">
+    <img src="/static/svg/success_wave.svg" alt="Wave" class="wave">
     <div class="container">
         <div class="img">
-                <img src="/slurp/static/svg/success.svg" alt="Hero">
+                <img src="/static/svg/success.svg" alt="Hero">
         </div>
         <div class="success-container">
             <div class="data">

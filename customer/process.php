@@ -11,9 +11,9 @@
         $newPassword = $_POST['new_password'];
         $newPassword2 = $_POST['new_password2'];
         if (!($newPassword == $newPassword2)) {
-            $error = new ErrorResponse(500, "Passwords Don't Match", "http://".$_SERVER['HTTP_HOST']."/slurp/customer/profile.php");
+            $error = new ErrorResponse(500, "Passwords Don't Match", "http://".$_SERVER['HTTP_HOST']."/customer/profile.php");
             setcookie("error", serialize($error), time() + 100, "/");
-            header('Location: /slurp/error.php');
+            header('Location: /error.php');
             return;
         }
         $user = unserialize($_COOKIE['user']);
@@ -22,12 +22,12 @@
         if ($updated) {
             $response = new SuccessResponse(201, "Password updated successfully");
             setcookie("response", serialize($response), time() + 10, "/");
-            header('Location: /slurp/customer/profile.php');
+            header('Location: /customer/profile.php');
             return;
         } else {
             $error = new ErrorResponse(500, "Password update failed");
             setcookie("error", serialize($error), time() + 100, "/");
-            header('Location: /slurp/error.php');
+            header('Location: /error.php');
             return;
         }
     }

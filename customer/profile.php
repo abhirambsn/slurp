@@ -59,7 +59,7 @@
                                             <h5 class="modal-title" id="exampleModalLabel">Change Password</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <form action="/slurp/customer/process.php" method="post">
+                                        <form action="/customer/process.php" method="post">
                                             <div class="modal-body">
                                                 <div class="mb-3">
                                                     <label for="oldPass" class="form-label">Old Password</label>

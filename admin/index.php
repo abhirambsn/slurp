@@ -13,7 +13,7 @@
 
     $restaurants = get_all_restaurants($connection);
     if (!$stats) {
-        header('Location: /slurp/error.php');
+        header('Location: /error.php');
         return;
     }
     $title = "Slurp - Admin";
@@ -22,7 +22,7 @@
 
     include('../template/header.php');
 ?>
-    <link rel="stylesheet" href="/slurp/static/css/admin.css">
+    <link rel="stylesheet" href="/static/css/admin.css">
     <div class="container my-2">
         <h5 class="text-center display-5">Admin Dashboard</h5>
         <?php if($response): ?>
@@ -94,7 +94,7 @@
                         <td>
                             <div class="row">
                                 <button class="col mx-2 btn btn-success"><i class="fas fa-edit" data-bs-toggle="modal" data-bs-target="#editRestaurant-<?php $restaurant['restaurant_id']; ?>"></i>&nbsp; Edit</button>
-                                <button class="col mx-2 btn btn-danger text-light" onclick="window.location.href='/slurp/restaurant/process.php?type=delete&id=<?php echo $restaurant['restaurant_id']; ?>'"><i class="fas fa-trash"></i>&nbsp; Delete</button>
+                                <button class="col mx-2 btn btn-danger text-light" onclick="window.location.href='/restaurant/process.php?type=delete&id=<?php echo $restaurant['restaurant_id']; ?>'"><i class="fas fa-trash"></i>&nbsp; Delete</button>
                             </div>
                         </td>
                     </tr>
@@ -106,7 +106,7 @@
                                     <h5 class="modal-title" id="editRestaurantLabel">Edit Restaurant Data</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <form action="/slurp/restaurant/process.php" method="post">
+                                <form action="/restaurant/process.php" method="post">
                                     <div class="modal-body">
                                         <div class="mb-3">
                                             <label for="name" class="form-label">Restaurant Name</label>
@@ -147,7 +147,7 @@
                     <h5 class="modal-title" id="addRestaurantLabel">Add a Restaurant</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="/slurp/restaurant/process.php" method="post">
+                <form action="/restaurant/process.php" method="post">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="name" class="form-label">Restaurant Name</label>

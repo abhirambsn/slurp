@@ -11,7 +11,7 @@
     $title = "Slurp - ".$user->data['customer_name'];
     include('./template/header.php');
 ?>
-    <link rel="stylesheet" href="/slurp/static/css/stars.css">
+    <link rel="stylesheet" href="/static/css/stars.css">
     <div class="container my-2">
         <div class="row">
             <?php $counter = 0;foreach ($restaurants as $restaurant): ?>
@@ -33,7 +33,7 @@
                                     displayRating(rating, rid);
                                 </script>
                             </p>
-                            <button class="btn btn-primary text-light" onclick="window.location.href='/slurp/restaurant/restaurants.php?id=<?php echo $restaurant['restaurant_id']; ?>'"><i class="fas fa-info"></i>&nbsp;More Details</button>
+                            <button class="btn btn-primary text-light" onclick="window.location.href='/restaurant/restaurants.php?id=<?php echo $restaurant['restaurant_id']; ?>'"><i class="fas fa-info"></i>&nbsp;More Details</button>
                         </div>
                     </div>
                 </div>

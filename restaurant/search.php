@@ -20,9 +20,9 @@
         $restaurants = search($connection, $query, $filter, $order);
     } else {
         if (isset($_COOKIE['user'])) {
-            header('Location: /slurp/dashboard.php');
+            header('Location: /dashboard.php');
         } else {
-            header('Location: /slurp/index.php');
+            header('Location: /index.php');
         }
     }
 
@@ -31,7 +31,7 @@
 
     include_once('../template/header.php');
 ?>
-    <link rel="stylesheet" href="/slurp/static/css/stars.css">
+    <link rel="stylesheet" href="/static/css/stars.css">
     <div class="container my-2">
         <h6 class="display-6">Search Results for: <?php echo isset($_POST['query']) ? $query : ''; ?> </h6>
         <div class="sortby my-2">
@@ -72,7 +72,7 @@
                                         displayRating(rating, rid);
                                     </script>
                                 </p>
-                                <button class="btn btn-primary text-light" onclick="window.location.href='/slurp/restaurant/restaurants.php?id=<?php echo $restaurant['restaurant_id']; ?>'"><i class="fas fa-info"></i>&nbsp;More Details</button>
+                                <button class="btn btn-primary text-light" onclick="window.location.href='/restaurant/restaurants.php?id=<?php echo $restaurant['restaurant_id']; ?>'"><i class="fas fa-info"></i>&nbsp;More Details</button>
                             </div>
                         </div>
                     </div>

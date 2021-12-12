@@ -8,7 +8,7 @@
     if (!$restaurant) {
         $error = new ErrorResponse(500, "An Error Occured", "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
         setcookie("error", serialize($error), time() + 100, "/");
-        header('Location: /slurp/error.php');
+        header('Location: /error.php');
     }
     $reviews = get_restaurant_reviews($connection, $id);
     if (isset($_COOKIE['user'])) {
@@ -21,7 +21,7 @@
     }
     include_once('../template/header.php');
 ?>
-<link rel="stylesheet" href="/slurp/static/css/stars.css">
+<link rel="stylesheet" href="/static/css/stars.css">
 <div class="container my-2">
     <h3 class="display-4"><?php echo $restaurant['restaurant_name']; ?></h3>
     <?php if($response): ?>
@@ -108,7 +108,7 @@
         <div class="posting">
             <?php if(!isset($_COOKIE['user'])): ?>
                 <button class="btn btn-primary text-light disabled" type="button"><i class="fas fa-plus"></i>&nbsp;Post New Review</button>
-                <p class="text-muted my-2"><a href="/slurp/auth/login.php">Login</a> to post a review :)</p>
+                <p class="text-muted my-2"><a href="/auth/login.php">Login</a> to post a review :)</p>
             <?php else: ?>
                 <button class="btn btn-primary text-light" type="button" data-bs-toggle="modal" data-bs-target="#newReviewModal"><i class="fas fa-plus"></i>&nbsp;Post New Review</button>
                 <!-- Modal -->
@@ -119,7 +119,7 @@
                                 <h5 class="modal-title" id="newReviewModalLabel">New Review</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <form action="/slurp/restaurant/process.php" method="post">
+                            <form action="/restaurant/process.php" method="post">
                                 <div class="modal-body">
                                     <h5>Posting Review for <strong><?php echo $restaurant['restaurant_name']; ?></strong></h5>
                                     <h6>Posting as <strong><?php echo $user->data['customer_name']; ?></strong></h6>

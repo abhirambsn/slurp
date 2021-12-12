@@ -12,19 +12,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $title; ?></title>
-    <link rel="stylesheet" href="/slurp/static/css/bootstrap-modified.min.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-modified.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://kit.fontawesome.com/8586a77d33.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <script src="/slurp/static/js/bootstrap.bundle.js"></script>
-    <script src="/slurp/static/js/starRating.js"></script>
+    <script src="/static/js/bootstrap.bundle.js"></script>
+    <script src="/static/js/starRating.js"></script>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
             <?php if(isset($user)) : ?>
-                <a class="navbar-brand" href="/slurp/dashboard.php">Slurp</a>
+                <a class="navbar-brand" href="/dashboard.php">Slurp</a>
             <?php else : ?>
-                <a class="navbar-brand" href="/slurp/index.php">Slurp</a>
+                <a class="navbar-brand" href="/index.php">Slurp</a>
             <?php endif; ?>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -36,7 +36,7 @@
                             <?php if ($user->data['isAdmin']): ?>
                                 <div class=""></div>
                             <?php else: ?>
-                                <form class="d-flex flex-fill" action="/slurp/restaurant/search.php" method="get">
+                                <form class="d-flex flex-fill" action="/restaurant/search.php" method="get">
                                     <div class="input-group mb-12">
                                         <?php if(isset($squery)): ?>
                                             <input class="form-control w-50 me-2" type="search" name="query" placeholder="Search" value="<?php echo $squery; ?>" aria-label="Search">
@@ -48,7 +48,7 @@
                                 </form>
                             <?php endif; ?>
                         <?php else: ?>
-                            <form class="d-flex flex-fill" action="/slurp/restaurant/search.php" method="get">
+                            <form class="d-flex flex-fill" action="/restaurant/search.php" method="get">
                                 <div class="input-group mb-12">
                                     <?php if(isset($squery)): ?>
                                         <input class="form-control w-50 me-2" type="search" name="query" placeholder="Search" value="<?php echo $squery; ?>" aria-label="Search">
@@ -70,20 +70,20 @@
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <?php if($user->data['isAdmin']): ?>
-                                        <li><a href="/slurp/admin/" class="dropdown-item"><i class="fas fa-user-shield"></i>&nbsp;Admin Dashboard</a></li>    
+                                        <li><a href="/admin/" class="dropdown-item"><i class="fas fa-user-shield"></i>&nbsp;Admin Dashboard</a></li>    
                                     <?php endif; ?>
-                                    <li><a class="dropdown-item" href="/slurp/customer/profile.php"><i class="fas fa-user-circle"></i>&nbsp;My Profile</a></li>
-                                    <li><a href="/slurp/customer/my_reviews.php" class="dropdown-item"><i class="fas fa-list"></i>&nbsp;My Reviews</a></li>
+                                    <li><a class="dropdown-item" href="/customer/profile.php"><i class="fas fa-user-circle"></i>&nbsp;My Profile</a></li>
+                                    <li><a href="/customer/my_reviews.php" class="dropdown-item"><i class="fas fa-list"></i>&nbsp;My Reviews</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="/slurp/auth/process.php?logout=true"><i class="fas fa-sign-out-alt"></i>&nbsp;Logout</a></li>
+                                    <li><a class="dropdown-item" href="/auth/process.php?logout=true"><i class="fas fa-sign-out-alt"></i>&nbsp;Logout</a></li>
                                 </ul>
                             </li>
                         <?php else : ?>
                             <li class="nav-item">
-                                <a class="nav-link active" href="/slurp/auth/login.php">Login</a>
+                                <a class="nav-link active" href="/auth/login.php">Login</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" href="/slurp/auth/register.php">Register</a>
+                                <a class="nav-link active" href="/auth/register.php">Register</a>
                             </li>
                         <?php endif; ?>
                     </ul>

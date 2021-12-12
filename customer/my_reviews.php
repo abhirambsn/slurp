@@ -10,7 +10,7 @@
     $title = "Slurp - My Reviews";
     include('../template/header.php');
 ?>
-    <link rel="stylesheet" href="/slurp/static/css/stars.css">
+    <link rel="stylesheet" href="/static/css/stars.css">
     <div class="container my-2">
         <h3>My Reviews</h3>
         <table class="table table-hover table-bordered">
