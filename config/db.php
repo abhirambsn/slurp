@@ -1,6 +1,6 @@
 <?php
     use DotEnv\DotEnv;
-    $path = dirname(dirname(__FILE__)) . '\\.env';
+    $path = dirname(dirname(__FILE__)) . '/.env';
     (new DotEnv($path))->load();
     include('classes.php');
     $connection = null;
