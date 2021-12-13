@@ -1,8 +1,10 @@
 <?php 
     if (file_exists('./config/helpers.php')) {
         include_once('./config/helpers.php');
+        require_once('./config/SessionConfig.php');
     } else {
         include_once('../config/helpers.php');
+        require_once('../config/SessionConfig.php');
     }
 ?>
 <!DOCTYPE html>

@@ -5,8 +5,9 @@
     include_once('../util/dotenv.php');
     include_once('../config/db.php');
     include_once('../config/classes.php');
+    require_once('../config/SessionConfig.php');
     $connection = connect();
-    $user = unserialize($_COOKIE['user']);
+    $user = unserialize($_SESSION['user']);
     if(isset($_POST['new_review'])) {
         $rating = $_POST['rating'];
         $comment = $_POST['comment'];
@@ -24,7 +25,7 @@
             return;
         }
     } else if (isset($_POST['add_restaurant'])) {
-        $isAdmin = (unserialize($_COOKIE['user']))->data['isAdmin'];
+        $isAdmin = (unserialize($_SESSION['user']))->data['isAdmin'];
         if (!$isAdmin) {
             $error = new ErrorResponse(401, "Unauthorized");
             setcookie("error", serialize($error), time() + 100, "/");
@@ -47,7 +48,7 @@
             }
         }
     } else if (isset($_POST['edit_restaurant'])) {
-        $isAdmin = (unserialize($_COOKIE['user']))->data['isAdmin'];
+        $isAdmin = (unserialize($_SESSION['user']))->data['isAdmin'];
         if (!$isAdmin) {
             $error = new ErrorResponse(401, "Unauthorized");
             setcookie("error", serialize($error), time() + 100, "/");
@@ -73,7 +74,7 @@
     } else if (isset($_GET['type']) && $_GET['type'] == "delete") {
         if (isset($_GET['id'])) {
             $rid = $_GET['id'];
-            $isAdmin = (unserialize($_COOKIE['user']))->data['isAdmin'];
+            $isAdmin = (unserialize($_SESSION['user']))->data['isAdmin'];
             if (!$isAdmin) {
                 $error = new ErrorResponse(401, "Unauthorized");
                 setcookie("error", serialize($error), time() + 100, "/");

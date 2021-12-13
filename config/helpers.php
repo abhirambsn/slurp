@@ -1,6 +1,7 @@
 <?php
+require_once('SessionConfig.php');
 function isAuthenticated() {
-    if (isset($_COOKIE['user'])) {
+    if (isset($_SESSION['user'])) {
         return true;
     } else {
         $error = new ErrorResponse(401, "Not Authenticated", "http://".$_SERVER['HTTP_HOST'].'/slurp/auth/login.php');
@@ -11,7 +12,7 @@ function isAuthenticated() {
 }
 
 function isAdmin() {
-    $user = unserialize($_COOKIE['user']);
+    $user = unserialize($_SESSION['user']);
     if (!$user->data['isAdmin']) {
         $error = new ErrorResponse(401, "Unauthorized Access to Admin Area", "http://".$_SERVER['HTTP_HOST'].'/slurp/auth/login.php');
         setcookie("error", serialize($error), time() + 100, "/");

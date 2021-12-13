@@ -2,6 +2,7 @@
     /**
      * CAUTION: This file contains the BACKEND of this WEBSITE. MODIFY ONLY IF YOU KNOW WHAT YOU ARE DOING
      */
+    require_once('../config/SessionConfig.php');
     include_once('../util/dotenv.php');
     include_once('../config/db.php');
     include_once('../config/classes.php');
@@ -16,7 +17,7 @@
             header('Location: /slurp/error.php');
             return;
         }
-        $user = unserialize($_COOKIE['user']);
+        $user = unserialize($_SESSION['user']);
         $email = $user->data['email'];
         $updated = update_customer($connection, $email, $oldPassword, password: $newPassword);
         if ($updated) {

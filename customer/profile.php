@@ -1,8 +1,9 @@
 <?php 
     include_once('../config/helpers.php');
     include_once('../config/classes.php');
+    require_once('../config/SessionConfig.php');
     isAuthenticated();
-    $user = unserialize($_COOKIE['user']);
+    $user = unserialize($_SESSION['user']);
     $response = null;
 
     if (isset($_COOKIE['response'])) {

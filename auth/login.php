@@ -1,5 +1,6 @@
 <?php
-    if (isset($_COOKIE['user'])) {
+    require_once('../config/SessionConfig.php');
+    if (isset($_SESSION['user'])) {
         header('Location: /slurp/dashboard.php');
     }
 ?>

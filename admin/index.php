@@ -2,8 +2,9 @@
     include_once('../util/dotenv.php');
     include_once('../config/helpers.php');
     include_once('../config/db.php');
+    require_once('../config/SessionConfig.php');
 
-    $user = unserialize($_COOKIE['user']);
+    $user = unserialize($_SESSION['user']);
     $connection = connect();
     $stats = get_admin_stats($connection);
     $response = null;
@@ -99,7 +100,7 @@
                         </td>
                     </tr>
                     <!-- Edit Restaurant Modal -->
-                    <div class="modal fade" id="editRestaurant-<?php $restaurant['restaurant_id']; ?>" tabindex="-1" aria-labelledby="editRestaurantLabel" aria-hidden="true">
+                    <div class="modal fade" id="editRestaurant-<?php echo $restaurant['restaurant_id']; ?>" tabindex="-1" aria-labelledby="editRestaurantLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">

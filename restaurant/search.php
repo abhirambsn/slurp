@@ -1,8 +1,9 @@
 <?php
     include_once('../util/dotenv.php');
     include_once('../config/db.php');
-    if (isset($_COOKIE['user'])) {
-        $user = unserialize($_COOKIE['user']);
+    require_once('../config/SessionConfig.php');
+    if (isset($_SESSION['user'])) {
+        $user = unserialize($_SESSION['user']);
     }
 
     if (isset($_GET['query'])) {
@@ -19,7 +20,7 @@
         }
         $restaurants = search($connection, $query, $filter, $order);
     } else {
-        if (isset($_COOKIE['user'])) {
+        if (isset($_SESSION['user'])) {
             header('Location: /slurp/dashboard.php');
         } else {
             header('Location: /slurp/index.php');

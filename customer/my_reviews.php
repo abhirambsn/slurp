@@ -1,11 +1,12 @@
 <?php 
+    require_once('../config/SessionConfig.php');
     include('../config/helpers.php');
     include_once('../util/dotenv.php');
     include('../config/db.php');
     include_once('../config/classes.php');
     isAuthenticated();
     $connection = connect("localhost", "root", "", 3307, "test");
-    $user = unserialize($_COOKIE['user']);
+    $user = unserialize($_SESSION['user']);
     $reviews = get_user_reviews($connection, $user->data['customer_id']);
     $title = "Slurp - My Reviews";
     include('../template/header.php');

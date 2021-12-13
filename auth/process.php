@@ -2,6 +2,7 @@
     /**
      * CAUTION: This file contains the BACKEND of this WEBSITE. MODIFY ONLY IF YOU KNOW WHAT YOU ARE DOING
      */
+    require_once('../config/SessionConfig.php');
     include_once('../util/dotenv.php');
     include('../config/db.php');
     include_once('../config/classes.php');
@@ -40,7 +41,7 @@
                 $userResp = new UserCookie();
                 $userResp->set_login_status(true);
                 $userResp->set_data($check_login[1]);
-                setcookie("user", serialize($userResp), time() + 86400, "/");
+                $_SESSION['user'] = serialize($userResp);
                 if ($userResp->data['isAdmin']) {
                     header('Location: /slurp/admin/');
                     return;
@@ -55,16 +56,15 @@
             }
         }
     } else if (isset($_GET['logout'])) {
-        if (isset($_COOKIE['user'])) {
-            unset($_COOKIE['user']);
-            setcookie("user", null, time() - 1, "/");
+        if (isset($_SESSION['user'])) {
+            session_destroy();
             $response = new SuccessResponse(200, "Logout Successful");
             setcookie("response", serialize($response), time() + 10, "/");
             header('Location: /slurp/index.php');
             return;
         }
     } else {
-        $error = new ErrorResponse(405, "Message not allowed");
+        $error = new ErrorResponse(405, "Method not allowed");
         setcookie("error", serialize($error), time() + 100, "/");
         header('Location: /slurp/error.php');
         return;

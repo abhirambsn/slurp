@@ -3,9 +3,10 @@
     include_once('./config/helpers.php');
     include_once('./config/db.php');
     include_once('./config/classes.php');
+    require_once('./config/SessionConfig.php');
     isAuthenticated();
     $connection = connect();
-    $user = unserialize($_COOKIE['user']);
+    $user = unserialize($_SESSION['user']);
     $restaurants = get_all_restaurants($connection);
 
     $title = "Slurp - ".$user->data['customer_name'];
@@ -13,10 +14,13 @@
 ?>
     <link rel="stylesheet" href="/slurp/static/css/stars.css">
     <div class="container my-2">
+        <script>
+            var rating, rid;
+        </script>
         <div class="row">
             <?php $counter = 0;foreach ($restaurants as $restaurant): ?>
                 <?php $avg = get_average_rating($connection, $restaurant['restaurant_id']); ?>
-                <div class="col-md-4">
+                <div class="col-md-4 my-1">
                     <div class="card rest-<?php echo $restaurant['restaurant_id'] ?>" style="width: 18rem;">
                         <img class="card-img-top" src="https://source.unsplash.com/featured/?food,restaurant/268x18<?php echo $counter; ?>" height="180" width="268" alt="<?php echo $restaurant['restaurant_name']; ?>">
                         <div class="card-body">
@@ -28,8 +32,8 @@
                                     <div class="stars-inner"></div>
                                 </div>
                                 <script>
-                                    const rating = '<?php echo $avg[0]; ?>';
-                                    const rid = '<?php echo $restaurant['restaurant_id']; ?>';
+                                    rating = '<?php echo $avg[0]; ?>';
+                                    rid = '<?php echo $restaurant['restaurant_id']; ?>';
                                     displayRating(rating, rid);
                                 </script>
                             </p>

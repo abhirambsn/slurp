@@ -2,6 +2,7 @@
     include_once('../util/dotenv.php');
     include_once('../config/db.php');
     include_once('../config/classes.php');
+    require_once('../config/SessionConfig.php');
     $connection = connect();
     $id = $_GET['id'];
     $restaurant = get_restaurant_data($connection, $id);
@@ -11,8 +12,8 @@
         header('Location: /slurp/error.php');
     }
     $reviews = get_restaurant_reviews($connection, $id);
-    if (isset($_COOKIE['user'])) {
-        $user = unserialize($_COOKIE['user']);
+    if (isset($_SESSION['user'])) {
+        $user = unserialize($_SESSION['user']);
     }
     $title = "Slurp - ".$restaurant['restaurant_name'];
     $response = null;
@@ -106,7 +107,7 @@
             </script>
         </p>
         <div class="posting">
-            <?php if(!isset($_COOKIE['user'])): ?>
+            <?php if(!isset($_SESSION['user'])): ?>
                 <button class="btn btn-primary text-light disabled" type="button"><i class="fas fa-plus"></i>&nbsp;Post New Review</button>
                 <p class="text-muted my-2"><a href="/slurp/auth/login.php">Login</a> to post a review :)</p>
             <?php else: ?>
